@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How It Works — 10000 Ideas</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+:root{
+  --obsidian:#0A0D13; --navy:#10151F; --navy-2:#161D2B; --navy-3:#1C2438;
+  --line:rgba(232,163,61,0.14); --gold:#E8A33D; --gold-bright:#FFC469;
+  --ember:#FF6A3D; --paper:#F3EFE6; --paper-dim:#C9C4B7; --muted:#7C8496;
+  --green:#8FD19E; --red:#F27E7E; --blue:#6EB5FF;
+  --mono:'JetBrains Mono',monospace; --serif:'DM Serif Display',serif; --sans:'DM Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--obsidian);color:var(--paper);font-family:var(--sans);line-height:1.5;}
+::selection{background:var(--gold);color:var(--obsidian);}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+h1,h2,h3{font-family:var(--serif);font-weight:400;}
+img{max-width:100%;display:block;}
+
+/* ---- NAV ---- */
+.site-nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:28px;padding:16px 40px;background:rgba(10,13,19,0.75);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);}
+.nav-logo{font-family:var(--serif);font-size:1.25rem;margin-right:auto;}
+.nav-logo span{color:var(--gold);}
+.nav-links{display:flex;gap:24px;font-size:0.88rem;color:var(--paper-dim);}
+.nav-links a{transition:color 0.2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.nav-cta{font-family:var(--mono);font-size:0.76rem;padding:9px 18px;background:var(--gold);color:var(--obsidian);border-radius:4px;transition:background 0.2s;}
+.nav-cta:hover{background:var(--gold-bright);}
+.nav-burger{display:none;font-size:1.3rem;color:var(--paper);}
+@media(max-width:860px){
+  .nav-links{position:fixed;top:60px;left:0;right:0;background:var(--navy);flex-direction:column;padding:20px 28px;border-bottom:1px solid var(--line);display:none;}
+  .nav-links.open{display:flex;}
+  .nav-burger{display:block;}
+  .nav-cta{display:none;}
+}
+
+/* ---- HERO ---- */
+.hero{padding:72px 40px 56px;text-align:center;max-width:820px;margin:0 auto;}
+.hero .eyebrow{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+.hero h1{font-size:clamp(2.1rem,5vw,3.4rem);line-height:1.1;margin-bottom:18px;}
+.hero h1 em{color:var(--gold);font-style:italic;}
+.hero p{color:var(--paper-dim);font-size:1.05rem;max-width:560px;margin:0 auto 32px;}
+
+/* ---- AI SEARCH BAR ---- */
+.ai-search{max-width:640px;margin:0 auto;position:relative;}
+.ai-search-box{display:flex;align-items:center;gap:10px;background:var(--navy);border:1px solid var(--line);border-radius:30px;padding:8px 8px 8px 22px;box-shadow:0 12px 40px rgba(0,0,0,0.35);}
+.ai-search-box .spark{color:var(--gold);font-size:1.1rem;}
+.ai-search-box input{flex:1;background:none;border:none;outline:none;color:var(--paper);font-family:var(--sans);font-size:0.95rem;padding:8px 0;}
+.ai-search-box input::placeholder{color:var(--muted);}
+.ai-search-box button{font-family:var(--mono);font-size:0.78rem;padding:10px 20px;background:var(--gold);color:var(--obsidian);border-radius:22px;white-space:nowrap;transition:background 0.2s;}
+.ai-search-box button:hover{background:var(--gold-bright);}
+.ai-hint{font-family:var(--mono);font-size:0.7rem;color:var(--muted);margin-top:12px;}
+.ai-hint b{color:var(--paper-dim);cursor:pointer;border-bottom:1px dashed var(--muted);}
+.ai-search-results{margin-top:14px;text-align:left;background:var(--navy);border:1px solid var(--line);border-radius:10px;padding:6px;display:none;}
+.ai-search-results.show{display:block;}
+.ai-result-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:6px;transition:background 0.15s;cursor:pointer;}
+.ai-result-item:hover{background:var(--navy-2);}
+.ai-result-item .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);margin-top:7px;flex-shrink:0;}
+.ai-result-item h4{font-family:var(--sans);font-weight:700;font-size:0.9rem;margin-bottom:2px;}
+.ai-result-item p{font-size:0.78rem;color:var(--muted);}
+.ai-result-item .match{margin-left:auto;font-family:var(--mono);font-size:0.7rem;color:var(--gold);flex-shrink:0;}
+
+/* ---- CATEGORY STRIP ---- */
+.cat-strip{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:0 40px 48px;max-width:900px;margin:0 auto;}
+.cat-pill{font-family:var(--mono);font-size:0.74rem;padding:8px 16px;border-radius:20px;border:1px solid var(--line);color:var(--paper-dim);transition:all 0.2s;}
+.cat-pill:hover,.cat-pill.active{border-color:var(--gold);color:var(--gold);background:rgba(232,163,61,0.08);}
+
+/* ---- MASONRY (Pinterest style) ---- */
+.masonry{column-count:4;column-gap:18px;padding:0 40px 60px;max-width:1400px;margin:0 auto;}
+@media(max-width:1200px){.masonry{column-count:3;}}
+@media(max-width:820px){.masonry{column-count:2;padding:0 20px 40px;}}
+@media(max-width:520px){.masonry{column-count:1;}}
+.idea-card{break-inside:avoid;margin-bottom:18px;background:var(--navy);border:1px solid var(--line);border-radius:10px;overflow:hidden;transition:transform 0.2s,border-color 0.2s;cursor:pointer;}
+.idea-card:hover{transform:translateY(-3px);border-color:var(--gold);}
+.idea-card .thumb{width:100%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:2.4rem;color:rgba(255,255,255,0.85);position:relative;}
+.idea-card .thumb .save-btn{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:rgba(10,13,19,0.55);display:flex;align-items:center;justify-content:center;font-size:0.9rem;backdrop-filter:blur(4px);transition:background 0.2s;}
+.idea-card .thumb .save-btn:hover{background:var(--gold);color:var(--obsidian);}
+.idea-card .thumb .cat-tag{position:absolute;bottom:10px;left:10px;font-family:var(--mono);font-size:0.64rem;padding:3px 9px;border-radius:12px;background:rgba(10,13,19,0.55);backdrop-filter:blur(4px);letter-spacing:0.06em;text-transform:uppercase;}
+.idea-card .body{padding:16px 16px 18px;}
+.idea-card h3{font-family:var(--sans);font-weight:700;font-size:0.98rem;margin-bottom:6px;line-height:1.3;}
+.idea-card p{font-size:0.82rem;color:var(--muted);margin-bottom:12px;}
+.idea-card .meta{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:0.7rem;color:var(--paper-dim);}
+.idea-card .meta .invest{color:var(--green);}
+
+/* ---- SECTION HEADERS ---- */
+.section-head{max-width:1400px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.section-head h2{font-size:1.5rem;}
+.section-head a{font-family:var(--mono);font-size:0.76rem;color:var(--gold);}
+
+/* ---- FOOTER ---- */
+.site-footer{border-top:1px solid var(--line);padding:40px;margin-top:40px;}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;}
+@media(max-width:700px){.footer-grid{grid-template-columns:1fr 1fr;}}
+.footer-grid h4{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.footer-grid a{display:block;font-size:0.84rem;color:var(--paper-dim);margin-bottom:8px;transition:color 0.2s;}
+.footer-grid a:hover{color:var(--gold);}
+.footer-bottom{max-width:1200px;margin:32px auto 0;padding-top:20px;border-top:1px solid var(--line);font-family:var(--mono);font-size:0.7rem;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+
+/* ---- FLOATING AI CHATBOT ---- */
+.chat-fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--ember));display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 8px 28px rgba(232,163,61,0.35);z-index:300;transition:transform 0.2s;color:var(--obsidian);}
+.chat-fab:hover{transform:scale(1.06);}
+.chat-panel{position:fixed;bottom:92px;right:24px;width:360px;max-width:90vw;height:460px;background:var(--navy);border:1px solid var(--line);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,0.5);display:none;flex-direction:column;overflow:hidden;z-index:300;}
+.chat-panel.open{display:flex;}
+.chat-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;background:var(--navy-2);}
+.chat-head .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--ember));display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:var(--obsidian);}
+.chat-head h4{font-family:var(--sans);font-size:0.88rem;}
+.chat-head p{font-family:var(--mono);font-size:0.66rem;color:var(--green);}
+.chat-head .close-chat{margin-left:auto;color:var(--muted);font-size:1rem;}
+.chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;}
+.chat-msg{display:flex;gap:8px;max-width:88%;}
+.chat-msg.user{align-self:flex-end;flex-direction:row-reverse;}
+.chat-av{width:24px;height:24px;border-radius:50%;background:var(--navy-3);display:flex;align-items:center;justify-content:center;font-size:0.7rem;flex-shrink:0;}
+.chat-av.ai{background:linear-gradient(135deg,var(--gold),var(--ember));color:var(--obsidian);}
+.chat-bubble{background:var(--navy-3);padding:9px 13px;border-radius:10px;font-size:0.82rem;line-height:1.45;}
+.chat-msg.user .chat-bubble{background:rgba(232,163,61,0.15);}
+.chat-quick{display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 10px;}
+.chat-quick button{font-family:var(--mono);font-size:0.68rem;padding:5px 10px;border:1px solid var(--line);border-radius:14px;color:var(--paper-dim);}
+.chat-quick button:hover{border-color:var(--gold);color:var(--gold);}
+.chat-input-row{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);}
+.chat-input-row input{flex:1;background:var(--navy-2);border:1px solid var(--line);border-radius:20px;padding:9px 14px;color:var(--paper);font-size:0.82rem;outline:none;}
+.chat-input-row input:focus{border-color:var(--gold);}
+.chat-input-row button{width:36px;height:36px;border-radius:50%;background:var(--gold);color:var(--obsidian);flex-shrink:0;}
+.typing-dot{width:5px;height:5px;border-radius:50%;background:var(--muted);display:inline-block;margin:0 1px;animation:blink 1.2s infinite;}
+.typing-dot:nth-child(2){animation-delay:0.2s;}
+.typing-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes blink{0%,60%,100%{opacity:0.3;}30%{opacity:1;}}
+
+/* ---- GENERIC PAGE HEADER (inner pages) ---- */
+.page-head{max-width:900px;margin:0 auto;padding:56px 40px 32px;text-align:center;}
+.page-head .eyebrow{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.page-head h1{font-size:clamp(1.8rem,4vw,2.6rem);}
+.page-head p{color:var(--paper-dim);margin-top:14px;max-width:560px;margin-left:auto;margin-right:auto;}
+
+.breadcrumb{max-width:1400px;margin:0 auto;padding:16px 40px 0;font-family:var(--mono);font-size:0.72rem;color:var(--muted);}
+.breadcrumb a{color:var(--paper-dim);}
+.breadcrumb a:hover{color:var(--gold);}
+
+</style>
+<style>
+.steps{max-width:820px;margin:0 auto;padding:0 40px 60px;display:flex;flex-direction:column;gap:20px;}
+.step{display:flex;gap:20px;background:var(--navy);border:1px solid var(--line);border-radius:10px;padding:22px 24px;}
+.step .num{font-family:var(--mono);font-size:1.3rem;color:var(--gold);flex-shrink:0;width:36px;}
+.step h3{font-size:1.1rem;margin-bottom:6px;}
+.step p{color:var(--paper-dim);font-size:0.9rem;}
+.stats3{max-width:900px;margin:0 auto;padding:0 40px 60px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:700px){.stats3{grid-template-columns:1fr;}}
+.stat3{background:var(--navy);border:1px solid var(--line);border-radius:10px;padding:24px;text-align:center;}
+.stat3 .n{font-family:var(--mono);font-size:1.8rem;color:var(--gold);}
+.stat3 .l{font-family:var(--mono);font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:6px;}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">10000<span>ideas</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="browse.html">Browse Ideas</a>
+    <a href="about.html" class="active">How It Works</a>
+    <a href="cms-dashboard.html">CMS Login</a>
+  </div>
+  <a href="browse.html" class="nav-cta">Explore Ideas</a>
+  <button class="nav-burger" onclick="burgerToggle()">☰</button>
+</nav>
+
+<div class="breadcrumb"><a href="index.html">Home</a> / How It Works</div>
+
+<div class="page-head">
+  <div class="eyebrow">the process</div>
+  <h1>From "what should I build" to a matched, sized idea</h1>
+  <p>Three steps, powered by an AI search layer and an assistant that stays with you through validation.</p>
+</div>
+
+<div class="steps">
+  <div class="step"><div class="num">01</div><div><h3>Tell the AI what you have</h3><p>Budget, skills, location, or interest — plain language in, ranked ideas out. No forms, no dropdown maze.</p></div></div>
+  <div class="step"><div class="num">02</div><div><h3>Browse and compare</h3><p>Every idea is tagged with an investment range, category, and AI match score so you can compare fairly.</p></div></div>
+  <div class="step"><div class="num">03</div><div><h3>Ask the assistant to go deeper</h3><p>Chat with the built-in idea assistant for registration steps, funding schemes, or a shortlist matched to your budget.</p></div></div>
+</div>
+
+<div class="stats3">
+  <div class="stat3"><div class="n">10,000+</div><div class="l">Ideas indexed</div></div>
+  <div class="stat3"><div class="n">18</div><div class="l">Categories</div></div>
+  <div class="stat3"><div class="n">96%</div><div class="l">Top match accuracy</div></div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div><h4>10000ideas</h4><p style="color:var(--paper-dim);font-size:0.85rem;max-width:280px;">An AI-matched marketplace of business ideas for Indian entrepreneurs.</p></div>
+    <div><h4>Explore</h4><a href="browse.html">Browse Ideas</a><a href="about.html">How It Works</a></div>
+    <div><h4>Company</h4><a href="about.html">About</a><a href="cms-dashboard.html">CMS Login</a></div>
+    <div><h4>Legal</h4><a href="#">Terms</a><a href="#">Privacy</a></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 10000ideas — prototype build for review</span></div>
+</footer>
+
+<div class="chat-fab" onclick="toggleChat()">✨</div>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-head"><div class="av">✨</div><div><h4>Idea Assistant</h4><p>● online</p></div><div class="close-chat" onclick="toggleChat()">✕</div></div>
+  <div class="chat-body" id="chatBody"><div class="chat-msg"><div class="chat-av ai">✨</div><div class="chat-bubble">Questions about how the platform works? Ask away.</div></div></div>
+  <div class="chat-quick">
+    <button onclick="sendChatMsg('How do I register on Startup India')">Startup India</button>
+  </div>
+  <div class="chat-input-row">
+    <input id="chatInput" type="text" placeholder="Ask anything..." onkeydown="if(event.key==='Enter')sendChatMsg(this.value)">
+    <button onclick="sendChatMsg(document.getElementById('chatInput').value)">➤</button>
+  </div>
+</div>
+
+<script>
+// ---- SHARED IDEA DATASET (dummy/random content for prototype) ----
+const IDEAS = [
+  {id:1,title:"IoT Soil Moisture Monitoring",cat:"AgriTech",desc:"Wireless sensors that cut farm water usage by 40%. Bootstrap-friendly hardware play.",invest:"₹2L–₹6L",match:96,color:"linear-gradient(135deg,#2d5a3d,#0f2a1a)",icon:"🌱",h:220},
+  {id:2,title:"AI Diagnostic Kiosks for Rural India",cat:"HealthTech",desc:"Self-serve health kiosks for villages without a clinic, tied to PHC partnerships.",invest:"₹8L–₹20L",match:93,color:"linear-gradient(135deg,#1e4a6b,#0a1f30)",icon:"🩺",h:260},
+  {id:3,title:"Hyperlocal Weather Advisory",cat:"AgriTech",desc:"WhatsApp-first crop advisory in local language, ₹99/month per farmer.",invest:"₹1L–₹4L",match:88,color:"linear-gradient(135deg,#3d5a2d,#1a2a0f)",icon:"⛅",h:200},
+  {id:4,title:"WhatsApp Commerce Platform",cat:"SaaS",desc:"Turn any WhatsApp number into a full storefront with catalog and checkout.",invest:"₹3L–₹9L",match:89,color:"linear-gradient(135deg,#3d2d5a,#1a0f2a)",icon:"🛍️",h:240},
+  {id:5,title:"Cold Press Juice Bar Franchise",cat:"F&B",desc:"Low investment F&B franchise model, ₹6L–₹15L all-in with training included.",invest:"₹6L–₹15L",match:96,color:"linear-gradient(135deg,#7a4a1e,#2a1a0a)",icon:"🥤",h:210},
+  {id:6,title:"EV Charging Station Franchise",cat:"CleanTech",desc:"Partnership model with state electricity boards for high-demand corridors.",invest:"₹10L–₹25L",match:91,color:"linear-gradient(135deg,#1e6b5a,#0a2a22)",icon:"🔌",h:250},
+  {id:7,title:"FPO Digital Management SaaS",cat:"SaaS",desc:"Subscription software for Farmer Producer Organisations, ₹3K/year per FPO.",invest:"₹2L–₹5L",match:94,color:"linear-gradient(135deg,#2d4a5a,#0f1f2a)",icon:"📊",h:190},
+  {id:8,title:"GST Compliance SaaS for MSMEs",cat:"SaaS",desc:"Auto-filing and reconciliation tool aimed at India's 10M+ MSMEs.",invest:"₹4L–₹10L",match:85,color:"linear-gradient(135deg,#5a2d4a,#2a0f1f)",icon:"🧾",h:230},
+  {id:9,title:"AI Tutoring App for CBSE Boards",cat:"EdTech",desc:"Personalised AI tutor for Class 10–12 students with adaptive practice sets.",invest:"₹3L–₹8L",match:81,color:"linear-gradient(135deg,#2d3d5a,#0f172a)",icon:"📚",h:270},
+  {id:10,title:"Solar-Powered Cold Storage",cat:"AgriTech",desc:"Off-grid cold storage units for vegetable preservation, CSR-fundable.",invest:"₹5L–₹14L",match:84,color:"linear-gradient(135deg,#5a5a2d,#2a2a0f)",icon:"☀️",h:200},
+  {id:11,title:"Affordable Hearing Aid Startup",cat:"HealthTech",desc:"Low-cost hearing aids engineered for Tier 2/3 markets.",invest:"₹6L–₹18L",match:91,color:"linear-gradient(135deg,#1e5a6b,#0a222a)",icon:"👂",h:210},
+  {id:12,title:"Mental Health Subscription App",cat:"HealthTech",desc:"AI-assisted check-ins with licensed therapist escalation paths.",invest:"₹4L–₹12L",match:87,color:"linear-gradient(135deg,#4a2d5a,#1f0f2a)",icon:"🧠",h:240},
+  {id:13,title:"Skill Training Franchise (NSDC)",cat:"Education",desc:"Vocational training centre partnered with NSDC for govt-backed demand.",invest:"₹8L–₹20L",match:83,color:"linear-gradient(135deg,#5a3d2d,#2a190f)",icon:"🎓",h:220},
+  {id:14,title:"Online Tiffin Delivery Service",cat:"F&B",desc:"Home-cooked meal subscriptions for working professionals, hyperlocal.",invest:"₹50K–₹2L",match:79,color:"linear-gradient(135deg,#5a4a2d,#2a1f0f)",icon:"🍱",h:190},
+  {id:15,title:"Freelance GST Filing Network",cat:"Services",desc:"On-demand certified filers matched to MSMEs monthly, commission model.",invest:"₹30K–₹1L",match:77,color:"linear-gradient(135deg,#2d5a4a,#0f2a1f)",icon:"💼",h:230},
+  {id:16,title:"D2C Millet Snack Brand",cat:"F&B",desc:"Health-forward snacking brand built on Indian millets, DTC + quick commerce.",invest:"₹5L–₹15L",match:86,color:"linear-gradient(135deg,#6b4a1e,#2a1e0a)",icon:"🌾",h:250},
+];
+
+const AI_SEARCH_MAP = {
+  rural:[1,3,10],health:[2,11,12],saas:[4,7,8],franchise:[5,6,13],
+  agri:[1,3,10],farm:[1,3,10],food:[5,14,16],edtech:[9,13],education:[9,13],
+  climate:[6,10],ev:[6],solar:[10],mental:[12],
+};
+
+function renderMasonry(containerId, list){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  el.innerHTML = list.map(idea => `
+    <div class="idea-card" onclick="location.href='idea.html?id=${idea.id}'">
+      <div class="thumb" style="height:${idea.h}px;background:${idea.color}">
+        <span>${idea.icon}</span>
+        <div class="save-btn" onclick="event.stopPropagation()">♡</div>
+        <div class="cat-tag">${idea.cat}</div>
+      </div>
+      <div class="body">
+        <h3>${idea.title}</h3>
+        <p>${idea.desc}</p>
+        <div class="meta"><span class="invest">${idea.invest}</span><span>◆ ${idea.match}% match</span></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function aiSearch(query){
+  const q = query.toLowerCase().trim();
+  const box = document.getElementById('aiSearchResults');
+  if(!box) return;
+  if(q.length < 2){ box.classList.remove('show'); box.innerHTML=''; return; }
+  let ids = [];
+  Object.keys(AI_SEARCH_MAP).forEach(k=>{ if(q.includes(k)) ids = ids.concat(AI_SEARCH_MAP[k]); });
+  if(ids.length===0){
+    ids = IDEAS.filter(i => i.title.toLowerCase().includes(q) || i.cat.toLowerCase().includes(q) || i.desc.toLowerCase().includes(q)).map(i=>i.id);
+  }
+  if(ids.length===0){ ids = IDEAS.slice(0,4).map(i=>i.id); }
+  const results = [...new Set(ids)].slice(0,4).map(id => IDEAS.find(i=>i.id===id));
+  box.innerHTML = results.map(r=>`
+    <div class="ai-result-item" onclick="location.href='idea.html?id=${r.id}'">
+      <div class="dot"></div>
+      <div><h4>${r.title}</h4><p>${r.desc}</p></div>
+      <div class="match">${r.match}%</div>
+    </div>
+  `).join('');
+  box.classList.add('show');
+}
+
+function fillAndSearch(text){
+  const input = document.getElementById('aiSearchInput');
+  if(input){ input.value = text; aiSearch(text); }
+}
+
+// ---- FLOATING CHATBOT ----
+function toggleChat(){
+  document.getElementById('chatPanel').classList.toggle('open');
+}
+const CHAT_RESPONSES = {
+  '₹5 lakhs': "With ₹5L (~$6K) your strongest options are WhatsApp Commerce SaaS, IoT soil sensor kits sold to FPOs, or an NSDC-partnered skill training franchise. Want details on any of these?",
+  'Startup India': "To register: incorporate as Pvt Ltd/LLP, create an account on startupindia.gov.in, fill the DPIIT recognition form, then submit your incorporation certificate and pitch deck. Approval usually takes 2-3 weeks.",
+  'franchise': "Popular low-risk franchises on the platform right now: Cold Press Juice Bar (₹6L-15L), EV Charging Station (₹10L-25L), and NSDC Skill Training Centres (₹8L-20L).",
+};
+function sendChatMsg(msg){
+  if(!msg || !msg.trim()) return;
+  const input = document.getElementById('chatInput');
+  const win = document.getElementById('chatBody');
+  input.value='';
+  win.innerHTML += `<div class="chat-msg user"><div class="chat-av">U</div><div class="chat-bubble">${msg}</div></div>`;
+  const typingId = 'typing_'+Date.now();
+  win.innerHTML += `<div class="chat-msg" id="${typingId}"><div class="chat-av ai">✨</div><div class="chat-bubble"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div></div>`;
+  win.scrollTop = win.scrollHeight;
+  let resp = "Based on our database of 10,000+ ideas: validate with 20 real customers before you build, start leaner than you think you need to, and check Startup India / MUDRA schemes — they can cover 30-50% of early costs. Want ideas matched to your budget or interest?";
+  Object.keys(CHAT_RESPONSES).forEach(k=>{ if(msg.toLowerCase().includes(k.toLowerCase())) resp = CHAT_RESPONSES[k]; });
+  setTimeout(()=>{
+    document.getElementById(typingId)?.remove();
+    win.innerHTML += `<div class="chat-msg"><div class="chat-av ai">✨</div><div class="chat-bubble">${resp}</div></div>`;
+    win.scrollTop = win.scrollHeight;
+  },1200);
+}
+function burgerToggle(){
+  document.querySelector('.nav-links').classList.toggle('open');
+}
+
+</script>
+</body>
+</html>
